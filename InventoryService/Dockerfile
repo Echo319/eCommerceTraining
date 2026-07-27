@@ -2,15 +2,20 @@
 # Stage 1: Build the Application JAR
 # ==========================================
 FROM maven:3.9-eclipse-temurin-21-alpine AS builder
-WORKDIR /app
+WORKDIR /build
 
-# Copy pom.xml and download dependencies (cached layer)
+# Copy parent pom.xml and service pom.xml
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+COPY InventoryService/pom.xml ./InventoryService/
 
-# Copy source code and package executable JAR
-COPY src ./src
-RUN mvn clean package -DskipTests
+# Download dependencies
+RUN cd InventoryService && mvn dependency:go-offline -B
+
+# Copy source code
+COPY InventoryService/src ./InventoryService/src
+
+# Build JAR
+RUN cd InventoryService && mvn clean package -DskipTests
 
 # ==========================================
 # Stage 2: Create Lightweight Runtime Image
@@ -18,12 +23,12 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Create a non-root user for security
+# Create non-root user
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# Copy ONLY the built JAR from Stage 1
-COPY --from=builder /app/target/*.jar app.jar
+# Copy JAR
+COPY --from=builder /build/InventoryService/target/*.jar app.jar
 
 EXPOSE 8080
 

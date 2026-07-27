@@ -131,8 +131,8 @@ services:
   # ==========================================
   api-gateway:
     build:
-      context: ./APIGateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./APIGateway/Dockerfile
     container_name: local-api-gateway
     restart: unless-stopped
     ports:
@@ -167,8 +167,8 @@ services:
   # ==========================================
   auth-service:
     build:
-      context: ./AuthService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./AuthService/Dockerfile
     container_name: local-auth-service
     restart: unless-stopped
     ports:
@@ -203,8 +203,8 @@ services:
   # ==========================================
   product-catalog:
     build:
-      context: ./ProductCatalog
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./ProductCatalog/Dockerfile
     container_name: local-product-catalog
     restart: unless-stopped
     ports:
@@ -239,8 +239,8 @@ services:
   # ==========================================
   inventory-service:
     build:
-      context: ./InventoryService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./InventoryService/Dockerfile
     container_name: local-inventory-service
     restart: unless-stopped
     ports:
@@ -275,8 +275,8 @@ services:
   # ==========================================
   order-service:
     build:
-      context: ./OrderService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./OrderService/Dockerfile
     container_name: local-order-service
     restart: unless-stopped
     ports:
@@ -311,8 +311,8 @@ services:
   # ==========================================
   payment-service:
     build:
-      context: ./PaymentService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./PaymentService/Dockerfile
     container_name: local-payment-service
     restart: unless-stopped
     ports:
