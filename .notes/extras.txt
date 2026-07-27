@@ -1,0 +1,97 @@
+Start environment: docker compose up -d
+
+Stop environment: docker compose down
+
+Stop and wipe volume data (fresh start): docker compose down -v
+
+Inspect Kafka topics & events: Open http://localhost:8080 in your browser.
+
+Will need to investigate the JWT things in the auth service. CVEs and spring wouldnt let me init with them so something must be wrong
+
+
+SAGA PATTERN this is for certain something we have missed all our lives
+What is the Saga Pattern?
+
+A Saga is a sequence of local transactions. Each step in the saga updates data within a single service's database.
+
+If all steps succeed, the saga completes. If any step fails midway, the saga executes a series of compensating transactions to undo the changes made by the preceding steps.
+
+                  ┌──────────────────────────────────────────────┐
+                  │          SUCCESSFUL HAPPY PATH               │
+                  └──────────────────────────────────────────────┘
+
+          1. Create Order            2. Reserve Stock           3. Charge Payment
+         ┌─────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+         │  Order Service  │ ────> │ Inventory Service│ ────> │ Payment Service  │
+         └─────────────────┘       └──────────────────┘       └──────────────────┘
+           [Status: PENDING]         [Stock Decremented]        [Card Charged]
+                                                                       │
+                                                                       ▼
+                                                             [Order Status: APPROVED]
+
+
+                          ┌──────────────────────────────────────────────┐
+                          │          FAILED PATH WITH COMPENSATION       │
+                          └──────────────────────────────────────────────┘
+
+          1. Create Order            2. Reserve Stock           3. Charge Payment FAILS!
+         ┌─────────────────┐       ┌──────────────────┐       ┌────────────────────────┐
+         │  Order Service  │       │ Inventory Service│       │    Payment Service     │
+         └─────────────────┘       └──────────────────┘       └────────────────────────┘
+           [Status: PENDING]         [Stock Decremented]         [Insufficient Funds ❌]
+                  ▲                          ▲                            │
+                  │                          │                            │
+                  │  Compensating Event:     │   Compensating Event:      │
+                  │  Cancel Order            │   Release Reserved Stock   │
+                  └──────────────────────────┴────────────────────────────┘
+                    [Status: CANCELLED]        [Stock Restored]
+
+
+The Two Core Approaches
+
+There are two primary ways to implement and coordinate a Saga: Choreography and Orchestration.
+1. Choreography (Event-Driven / Decoupled)
+
+In Choreography, there is no central controller. Services listen to events emitted by other services and decide when to act.
+
+    Happy Flow:
+
+        Order Service saves an order (PENDING) and emits an OrderCreated event.
+
+        Inventory Service listens to OrderCreated, reserves stock, and emits a StockReserved event.
+
+        Payment Service listens to StockReserved, processes payment, and emits a PaymentProcessed event.
+
+        Order Service listens to PaymentProcessed and updates the order status to APPROVED.
+
+    Failure / Compensation Flow:
+
+        If Payment Service fails, it emits a PaymentFailed event.
+
+        Inventory Service listens to PaymentFailed and runs a compensating action: restores the stock.
+
+        Order Service listens to PaymentFailed and updates status to CANCELLED.
+
+    Best For: Simple workflows with 2 to 4 services where you want tight decoupling.
+
+2. Orchestration (Central Controller)
+
+In Orchestration, a dedicated Saga Orchestrator service (or a state machine component inside Order Service) controls the process. It explicitly tells each service what command to execute and handles response events.
+
+    Flow:
+
+        Order Service calls Saga Orchestrator.
+
+        Orchestrator sends command Reserve Stock to Inventory Service.
+
+        Inventory Service replies Stock Reserved.
+
+        Orchestrator sends command Process Payment to Payment Service.
+
+        Payment Service replies Payment Failed.
+
+        Orchestrator sends compensation command Release Stock to Inventory Service.
+
+        Orchestrator marks the order as CANCELLED.
+
+    Best For: Complex workflows involving many steps, conditional branches, or long-running steps.
