@@ -1,0 +1,37 @@
+spring.application.name=api-gateway
+server.port=8080
+
+# Database
+spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/api_gateway_db
+spring.datasource.username=${DB_USER:root}
+spring.datasource.password=${DB_PASSWORD:changeme}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.jdbc.batch_size=10
+
+# Redis
+spring.data.redis.host=${REDIS_HOST:localhost}
+spring.data.redis.port=${REDIS_PORT:6379}
+spring.data.redis.timeout=2000
+
+# Kafka
+spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP:localhost:29092}
+spring.cloud.stream.kafka.binder.brokers=${KAFKA_BOOTSTRAP:localhost:29092}
+
+# Actuator
+management.endpoints.web.exposure.include=health,metrics,prometheus,info
+management.endpoint.health.show-details=always
+management.metrics.export.prometheus.enabled=true
+
+# Tracing
+management.tracing.sampling.probability=1.0
+management.zipkin.tracing.endpoint=http://localhost:9411/api/v2/spans
+
+# Logging
+logging.level.root=INFO
+logging.level.com.rdavies=DEBUG
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
