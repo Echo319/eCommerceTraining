@@ -1,0 +1,18 @@
+                           [ React / Next.js / Angular Frontend ]
+                                            │
+                                            ▼
+                                  [ Spring Cloud Gateway ]
+                                  (Auth Check, Routing, Rate Limit)
+                                            │
+        ┌───────────────────────────────────┼───────────────────────────────────┐
+        ▼                                   ▼                                   ▼
+[ Product Catalog Service ]       [ Order Service ]                   [ Inventory Service ]
+(PostgreSQL + Redis Read-Through) (PostgreSQL)                        (PostgreSQL)
+                                            │                                   ▲
+                                            │ (Publishes OrderCreatedEvent)     │ (Consumes & Reserves)
+                                            ▼                                   │
+                                    [ Kafka / RabbitMQ ] ───────────────────────┘
+                                            │
+                                            ▼
+                                   [ Payment Service ]
+                                   (Stripe Sandbox Integration)
