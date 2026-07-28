@@ -5,6 +5,10 @@
 
 Set up a Maven or Gradle multi-module project (or separate git repos). Containerize local infrastructure using Docker Compose (PostgreSQL instances, Redis, Kafka/RabbitMQ).
 
+As far as I can tell this is now complete. There is a CI/CD pipeline, A docker compose with docker files in each module.
+Maven builds successfully, Caveat I dont know what flyway? does so that is currently disabled in tests so that will need to be reactivated once implementation starts. 
+So in theory with a docker compose we can have all our services running and connected to the appropriate dbs. so the foundation is there to start writing implmentations and defining our model.
+
 ### Phase 2: 
 
 #### Product & Catalog Service:
