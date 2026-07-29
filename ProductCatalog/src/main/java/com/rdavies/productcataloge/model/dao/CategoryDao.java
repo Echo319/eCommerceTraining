@@ -16,7 +16,7 @@ public class CategoryDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
+    private long Id;
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;
