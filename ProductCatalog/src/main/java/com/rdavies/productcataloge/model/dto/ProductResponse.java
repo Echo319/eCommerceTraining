@@ -1,6 +1,7 @@
 package com.rdavies.productcataloge.model.dto;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -12,6 +13,6 @@ public record ProductResponse(
     BigDecimal price,
     Boolean isActive,
     Set<CategoryResponse> categories,
-    LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    Instant createdAt,
+    Instant updatedAt
 ) {}

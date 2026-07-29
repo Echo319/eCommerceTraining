@@ -7,16 +7,16 @@ import java.util.Set;
 
 @Entity
 @Table(name = "product_categories")
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class CategoryDao {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private long id;
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;
@@ -25,6 +25,6 @@ public class CategoryDao {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
-    private Set<ProductDao> products;
+    private Set<Product> products;
 
 }

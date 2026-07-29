@@ -2,11 +2,11 @@ package com.rdavies.productcataloge.model.dao;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDao {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class ProductDao {
     private String description;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "stock_quantity")
     private int stockQuantity = 0;
@@ -56,5 +56,5 @@ public class ProductDao {
             joinColumns = @JoinColumn(name = "product_Id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<CategoryDao> categories = new HashSet<>();
+    private Set<Category> categories = new HashSet<>();
 }
