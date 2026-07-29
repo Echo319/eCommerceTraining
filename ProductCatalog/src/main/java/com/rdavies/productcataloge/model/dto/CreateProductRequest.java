@@ -22,7 +22,7 @@ public record CreateProductRequest(
         BigDecimal price,
 
         @NotEmpty
-        Set<Integer> categoryIds
+        Set<Long> categoryIds
 
 ) {
 }

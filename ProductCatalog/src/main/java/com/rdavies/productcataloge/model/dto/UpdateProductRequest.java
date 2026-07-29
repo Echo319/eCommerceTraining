@@ -15,6 +15,6 @@ public record UpdateProductRequest(
         @Positive
         BigDecimal price,
         Boolean isActive,
-        Set<Integer> categoryIds
+        Set<Long> categoryIds
 ) {
 }
