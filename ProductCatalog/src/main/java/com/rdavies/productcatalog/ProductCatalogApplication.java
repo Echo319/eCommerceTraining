@@ -1,13 +1,13 @@
-package com.rdavies.productcataloge;
+package com.rdavies.productcatalog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProductCatalogeApplication {
+public class ProductCatalogApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductCatalogeApplication.class, args);
+        SpringApplication.run(ProductCatalogApplication.class, args);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.rdavies.productcataloge;
+package com.rdavies.productcatalog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

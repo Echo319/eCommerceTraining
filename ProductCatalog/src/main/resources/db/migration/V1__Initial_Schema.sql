@@ -1,6 +1,6 @@
 -- ProductCatalog Schema
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     sku VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -12,17 +12,16 @@ CREATE TABLE products (
 );
 
 CREATE TABLE product_categories (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
 
 CREATE TABLE product_category_mapping (
-    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-    category_id INTEGER NOT NULL REFERENCES product_categories(id) ON DELETE CASCADE,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    category_id BIGINT NOT NULL REFERENCES product_categories(id) ON DELETE CASCADE,
     PRIMARY KEY (product_id, category_id)
 );
 
-CREATE INDEX idx_products_sku ON products(sku);
 CREATE INDEX idx_products_name ON products(name);
 CREATE INDEX idx_products_active ON products(is_active);

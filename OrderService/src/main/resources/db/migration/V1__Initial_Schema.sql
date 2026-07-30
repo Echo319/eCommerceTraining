@@ -1,6 +1,6 @@
 -- OrderService Schema
 CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_number VARCHAR(50) NOT NULL UNIQUE,
     customer_id INTEGER NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE order_items (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     product_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE order_items (
 );
 
 CREATE TABLE order_events (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     event_type VARCHAR(50) NOT NULL,
     event_details JSONB,

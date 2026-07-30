@@ -1,6 +1,6 @@
 -- APIGateway Schema (minimal - for logging/audit only)
 CREATE TABLE gateway_requests (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     request_id VARCHAR(100) NOT NULL UNIQUE,
     method VARCHAR(10),
     path VARCHAR(500),
