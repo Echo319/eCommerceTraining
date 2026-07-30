@@ -34,7 +34,7 @@ public class ProductControllerIntegrationTests {
         mockMvc.perform(get("/api/v1/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(4)))
-                .andExpect(jsonPath("content[0].sku").value("LAPTOP-X1-001"));
+                .andExpect(jsonPath("$.content[0].sku").value("LAPTOP-X1-001"));
     }
 
 

@@ -40,7 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{sku}")
+    @GetMapping("/sku/{sku}")
     public ResponseEntity<ProductResponse> getBySku(@PathVariable String sku){
         return ResponseEntity.ok(service.getProductBySku(sku));
     }

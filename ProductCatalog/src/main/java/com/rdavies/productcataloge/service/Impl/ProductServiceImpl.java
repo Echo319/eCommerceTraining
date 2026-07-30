@@ -1,5 +1,7 @@
 package com.rdavies.productcataloge.service.Impl;
 
+import com.rdavies.productcataloge.exceptions.DuplicateResourceException;
+import com.rdavies.productcataloge.exceptions.ResouceNotFoundException;
 import com.rdavies.productcataloge.model.dao.Category;
 import com.rdavies.productcataloge.model.dao.Product;
 import com.rdavies.productcataloge.model.dto.CreateProductRequest;
@@ -35,8 +37,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
-        if(!productRepository.existsBySku(request.sku())) {
-            throw new RuntimeException("Product already exists");
+        if(productRepository.existsBySku(request.sku())) {
+            throw new DuplicateResourceException("Product already exists");
         }
 
         Product product = mapper.toEntity(request);
@@ -50,14 +52,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductBySku(String sku) {
         Product product = productRepository.findBySku(sku)
-                .orElseThrow(() -> new RuntimeException(String.format("Could not find resource %s", sku)));
+                .orElseThrow(() -> new ResouceNotFoundException(String.format("Could not find resource %s", sku)));
         return mapper.toDto(product);
     }
 
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("Could not find resource %d", id)));
+                .orElseThrow(() -> new ResouceNotFoundException(String.format("Could not find resource %d", id)));
         return mapper.toDto(product);
     }
 
@@ -75,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("No such product with Id %d", id)));
+                .orElseThrow(() -> new ResouceNotFoundException(String.format("No such product with Id %d", id)));
 
         mapper.updateEntityFromDto(request, product);
 
@@ -92,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         if(!productRepository.existsById(id)) {
-            throw new RuntimeException(String.format("No product with id of %d", id));
+            throw new ResouceNotFoundException(String.format("No product with id of %d", id));
         }
         productRepository.deleteById(id);
     }

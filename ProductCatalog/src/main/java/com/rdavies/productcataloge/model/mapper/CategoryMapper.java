@@ -6,7 +6,7 @@ import com.rdavies.productcataloge.model.dto.CreateCategoryRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
     CategoryResponse toDto(Category categoryDao);
