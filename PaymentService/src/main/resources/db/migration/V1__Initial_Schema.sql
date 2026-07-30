@@ -1,6 +1,6 @@
 -- PaymentService Schema
 CREATE TABLE payments (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     currency VARCHAR(3) DEFAULT 'USD',
@@ -12,7 +12,7 @@ CREATE TABLE payments (
 );
 
 CREATE TABLE payment_transactions (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     payment_id INTEGER NOT NULL REFERENCES payments(id) ON DELETE CASCADE,
     transaction_type VARCHAR(50) NOT NULL, -- AUTHORIZATION, CAPTURE, REFUND, REVERSAL
     amount DECIMAL(10, 2) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE payment_transactions (
 );
 
 CREATE TABLE refunds (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     payment_id INTEGER NOT NULL REFERENCES payments(id) ON DELETE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
     reason TEXT,

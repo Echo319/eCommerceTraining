@@ -1,6 +1,6 @@
 -- InventoryService Schema
 CREATE TABLE inventory_items (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     product_id INTEGER NOT NULL,
     warehouse_location VARCHAR(100),
     quantity_on_hand INTEGER NOT NULL DEFAULT 0,
@@ -13,7 +13,7 @@ CREATE TABLE inventory_items (
 );
 
 CREATE TABLE inventory_movements (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     inventory_item_id INTEGER NOT NULL REFERENCES inventory_items(id) ON DELETE CASCADE,
     movement_type VARCHAR(50) NOT NULL, -- STOCK_IN, STOCK_OUT, ADJUSTMENT, RESERVATION
     quantity INTEGER NOT NULL,
