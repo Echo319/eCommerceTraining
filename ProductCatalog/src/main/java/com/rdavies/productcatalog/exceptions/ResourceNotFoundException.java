@@ -1,4 +1,4 @@
-package com.rdavies.productcataloge.exceptions;
+package com.rdavies.productcatalog.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

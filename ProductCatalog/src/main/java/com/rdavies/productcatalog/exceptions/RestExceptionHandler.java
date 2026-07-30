@@ -1,4 +1,4 @@
-package com.rdavies.productcataloge.exceptions;
+package com.rdavies.productcatalog.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
