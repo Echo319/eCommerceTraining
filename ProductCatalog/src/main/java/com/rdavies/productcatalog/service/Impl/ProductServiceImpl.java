@@ -1,9 +1,6 @@
 package com.rdavies.productcatalog.service.Impl;
 
 import com.rdavies.productcatalog.exceptions.DuplicateResourceException;
-import com.rdavies.productcatalog.exceptions.ResouceNotFoundException;
-import com.rdavies.productcatalog.model.dao.Category;
-import com.rdavies.productcatalog.model.dao.Product;
 import com.rdavies.productcatalog.model.dto.CreateProductRequest;
 import com.rdavies.productcatalog.model.dto.ProductResponse;
 import com.rdavies.productcatalog.model.dto.UpdateProductRequest;
@@ -11,6 +8,9 @@ import com.rdavies.productcatalog.model.mapper.ProductMapper;
 import com.rdavies.productcatalog.repositories.CategoryRepository;
 import com.rdavies.productcatalog.repositories.ProductRepository;
 import com.rdavies.productcatalog.service.ProductService;
+import com.rdavies.productcatalog.exceptions.ResourceNotFoundException;
+import com.rdavies.productcatalog.model.dao.Category;
+import com.rdavies.productcatalog.model.dao.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,7 +34,6 @@ public class ProductServiceImpl implements ProductService {
         this.mapper = mapper;
     }
 
-
     @Override
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
@@ -43,23 +43,31 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = mapper.toEntity(request);
         Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+
+        // Validate that all requested category IDs exist
+        Set<Long> foundIds = categories.stream().map(Category::getId).collect(Collectors.toSet());
+        Set<Long> missing = request.categoryIds().stream().filter(id -> !foundIds.contains(id)).collect(Collectors.toSet());
+        if(!missing.isEmpty()) {
+            throw new ResourceNotFoundException("Categories not found: " + missing);
+        }
+
         product.setCategories(categories);
 
-        Product created = productRepository.save(product);
+         Product created = productRepository.save(product);
         return mapper.toDto(created);
     }
 
     @Override
     public ProductResponse getProductBySku(String sku) {
-        Product product = productRepository.findBySku(sku)
-                .orElseThrow(() -> new ResouceNotFoundException(String.format("Could not find resource %s", sku)));
+         Product product = productRepository.findBySku(sku)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find resource %s", sku)));
         return mapper.toDto(product);
     }
 
     @Override
     public ProductResponse getProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResouceNotFoundException(String.format("Could not find resource %d", id)));
+         Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find resource %d", id)));
         return mapper.toDto(product);
     }
 
@@ -76,13 +84,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResouceNotFoundException(String.format("No such product with Id %d", id)));
+         Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("No such product with Id %d", id)));
 
         mapper.updateEntityFromDto(request, product);
 
         if(request.categoryIds() != null && !request.categoryIds().isEmpty()) {
             Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+
+            // Validate that all requested category IDs exist
+            Set<Long> foundIds = categories.stream().map(Category::getId).collect(Collectors.toSet());
+            Set<Long> missing = request.categoryIds().stream().filter(cid -> !foundIds.contains(cid)).collect(Collectors.toSet());
+            if(!missing.isEmpty()) {
+                throw new ResourceNotFoundException("Categories not found: " + missing);
+            }
+
             product.setCategories(categories);
         }
 
@@ -94,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         if(!productRepository.existsById(id)) {
-            throw new ResouceNotFoundException(String.format("No product with id of %d", id));
+            throw new ResourceNotFoundException(String.format("No product with id of %d", id));
         }
         productRepository.deleteById(id);
     }
