@@ -16,9 +16,9 @@ public class SecurityConfiguration {
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/api/v1/products/**", "/api/v1/categories/**").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
-                .anyExchange().authenticated())
-            .httpBasic(basic -> {})
-            .csrf(csrf -> csrf.disable());
+                .anyExchange().permitAll()
+            )
+            .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return http.build();
     }
