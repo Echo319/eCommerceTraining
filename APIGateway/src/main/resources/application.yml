@@ -1,3 +1,9 @@
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Product Catalog
+        url: /product-catalog/v3/api-docs
+
 spring:
   application:
     name: api-gateway
@@ -40,27 +46,35 @@ spring:
         binder:
           brokers: ${KAFKA_BOOTSTRAP:localhost:29092}
     gateway:
-      # Global CORS Configuration
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
+      server:
+        webflux:
+          # Global CORS Configuration
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins: "*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
 
-      # Route Definitions
-      routes:
-        - id: product-service
-          uri: http://product-catalog:8080
-          predicates:
-            - Path=/api/v1/products/**, /api/v1/categories/**
-          filters:
-            - AddRequestHeader=X-Gateway-Request, ApiGateway
+          # Route Definitions
+          routes:
+            - id: product-service
+              uri: http://product-catalog:8080
+              predicates:
+                - Path=/api/v1/products/**, /api/v1/categories/**
+              filters:
+                - AddRequestHeader=X-Gateway-Request, ApiGateway
+            - id: product-service-docs
+              uri: http://product-catalog:8080
+              predicates:
+                - Path=/product-catalog/v3/api-docs
+              filters:
+                - RewritePath=/product-catalog/v3/api-docs, /v3/api-docs
 
 server:
   port: 8080
@@ -70,7 +84,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,metrics,prometheus,info
+        include: health,metrics,prometheus,info,gateway
   endpoint:
     health:
       show-details: always
