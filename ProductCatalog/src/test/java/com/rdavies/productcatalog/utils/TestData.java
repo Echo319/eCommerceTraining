@@ -24,8 +24,8 @@ public class TestData {
      */
     @Transactional
     public void clearDatabase() {
-        productRepository.deleteAll();
-        categoryRepository.deleteAll();
+        productRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
     }
 
     /**

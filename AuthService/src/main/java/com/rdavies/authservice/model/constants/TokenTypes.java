@@ -7,8 +7,8 @@ public class TokenTypes {
 
     }
 
-    public static String BEARER = "Bearer";
-    public static String ACCESS = "Access";
-    public static String REFRESH = "Refresh";
+    public static final String BEARER = "Bearer";
+    public static final String ACCESS = "Access";
+    public static final String REFRESH = "Refresh";
 
 }

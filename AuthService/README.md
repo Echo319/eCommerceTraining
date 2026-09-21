@@ -41,3 +41,20 @@ As the rest of the services are on a internal network the token will likely be s
 - Add the route predicate /api/v1/auth/** to ApiGateway/application.yml targeting http://auth-service:8082.
 
 - Enable JwtAuthenticationFilter on protected endpoints in the Gateway to validate the token issued by your new Auth Service.
+
+## Next steps 
+
+Minimum implementation checklist
+
+For this training project, I would consider token enforcement complete when the PR has:
+
+    A gateway ReactiveJwtDecoder
+    oauth2ResourceServer().jwt() enabled
+    /api/v1/auth/** explicitly permitted
+    Protected API routes changed from permitAll() to authenticated()
+    AuthService route added to the gateway
+    Tests for missing, invalid, expired, and valid tokens
+    A decision on whether downstream services also validate tokens
+    No direct public access to protected service containers
+
+The most important changes are replacing .anyExchange().permitAll() and configuring the decoder. Without those two changes, the gateway is not enforcing authentication.

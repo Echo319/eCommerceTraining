@@ -9,6 +9,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
+    @Mapping(target = "isActive", source = "active")
     ProductResponse toDto(Product product);
 
     @Mapping(target = "id", ignore = true)
@@ -22,6 +23,7 @@ public interface ProductMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "sku", ignore = true)
     @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "active", source = "isActive")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updateEntityFromDto(UpdateProductRequest request, @MappingTarget Product entity);
