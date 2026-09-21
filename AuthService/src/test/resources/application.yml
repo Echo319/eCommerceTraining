@@ -9,3 +9,6 @@ spring:
   flyway:
     enabled: false
     locations: classpath:db/migration
+jwt:
+  secret: "ThisisATestSecretForTestingSoThatsWhatItShallBeATestWithNonsenseWordsToBeTesting"
+  expiration-ms: 900000

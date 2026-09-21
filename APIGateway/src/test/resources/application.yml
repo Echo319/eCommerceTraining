@@ -15,3 +15,19 @@ spring:
   # Disable Flyway/Liquibase schema migrations in tests if using ddl-auto
   flyway:
     enabled: false
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: product-service-docs
+              uri: http://product-catalog:8080
+              predicates:
+                - Path=/product-catalog/v3/api-docs
+              filters:
+                - RewritePath=/product-catalog/v3/api-docs, /v3/api-docs
+
+jwt:
+  secret: "ThisisATestSecretForTestingSoThatsWhatItShallBeATestWithNonsenseWordsToBeTesting"
+  expiration-ms: 900000

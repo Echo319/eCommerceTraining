@@ -54,3 +54,7 @@ logging:
     com.rdavies: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+jwt :
+  secret : ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS:9000000}
