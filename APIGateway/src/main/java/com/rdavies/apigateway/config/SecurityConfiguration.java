@@ -13,12 +13,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
 
-    private final JwtConfiguration jwtConfiguration;
-
-    public SecurityConfiguration(JwtConfiguration jwtConfiguration) {
-        this.jwtConfiguration = jwtConfiguration;
-    }
-
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
                                                             JwtAuthenticationConverter jwtAuthenticationConverter) {

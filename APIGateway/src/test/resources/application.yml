@@ -27,3 +27,7 @@ spring:
                 - Path=/product-catalog/v3/api-docs
               filters:
                 - RewritePath=/product-catalog/v3/api-docs, /v3/api-docs
+
+jwt:
+  secret: "ThisisATestSecretForTestingSoThatsWhatItShallBeATestWithNonsenseWordsToBeTesting"
+  expiration-ms: 900000
