@@ -38,7 +38,7 @@ As the rest of the services are on a internal network the token will likely be s
 
 ## 6 Gateway Integration
 
-- Add the route predicate /api/v1/auth/** to ApiGateway/application.yml targeting http://auth-service:8082.
+- Add the route predicate /api/v1/auth/** to ApiGateway/application.yml targeting http://auth-service:8080.
 
 - Enable JwtAuthenticationFilter on protected endpoints in the Gateway to validate the token issued by your new Auth Service.
 
