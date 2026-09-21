@@ -1,5 +1,6 @@
 package com.rdavies.authservice.service.impl;
 
+import com.rdavies.authservice.exceptions.InactiveAccountException;
 import com.rdavies.authservice.exceptions.NoSuchUserException;
 import com.rdavies.authservice.exceptions.NotMatchingPasswordException;
 import com.rdavies.authservice.exceptions.NotUniqueException;
@@ -71,6 +72,10 @@ public class AuthServiceImpl implements AuthService {
         // ensure password matches
         if(!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new NotMatchingPasswordException();
+        }
+
+        if(user.getIsActive() == false) {
+            throw new InactiveAccountException();
         }
 
         // return JWT response
